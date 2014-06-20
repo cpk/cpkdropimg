@@ -59,7 +59,7 @@ public class ClipboardCPKDropImg implements FlavorListener {
                 //create Jframe and draw image 
                 ShowJFrame drapDropImg = new ShowJFrame();
                 drapDropImg.setExtendedState(JFrame.MAXIMIZED_BOTH);
-                drapDropImg.imgPanel.setViewportView(new ImgJPanel(image, drapDropImg, this.trayIcon));
+                drapDropImg.imgPanel.setViewportView(new ImgShow(image, drapDropImg, this.trayIcon));
                 drapDropImg.setVisible(true);
             }
         } //getData throws this.
