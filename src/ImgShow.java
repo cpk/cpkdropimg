@@ -25,7 +25,7 @@ import javax.swing.JPanel;
  *
  * @author Khoa
  */
-public class ImgShow extends JPanel implements Runnable{
+public class ImgShow extends JPanel implements Runnable {
 
     public BufferedImage Bi;
     public Point start;
@@ -33,7 +33,7 @@ public class ImgShow extends JPanel implements Runnable{
     public ShowJFrame newJFrame;
     TrayIcon trayIcon;
     boolean dragImage;
-    
+
     float time = 0;
 
     public ImgShow(BufferedImage bi, ShowJFrame newJFrame, TrayIcon trayIcon) {
@@ -68,9 +68,8 @@ public class ImgShow extends JPanel implements Runnable{
 //        g.fillRect(this.start.x, this.start.y, this.end.x - this.start.x, this.end.y - this.start.y);
         this.end.x = evt.getX();
         this.end.y = evt.getY();
-       
-        //this.update(g);
 
+        //this.update(g);
     }
 
     private void imgPanelMousePressed(java.awt.event.MouseEvent evt) {
@@ -85,12 +84,12 @@ public class ImgShow extends JPanel implements Runnable{
         this.end.x = evt.getX();
         this.end.y = evt.getY();
         dragImage = false;
-      
+
     }
 
     @Override
     public void update(Graphics g) {
-        
+
     }
 
     @Override
@@ -104,7 +103,7 @@ public class ImgShow extends JPanel implements Runnable{
         g.drawImage(Bi, this.start.x, this.start.y, this.end.x, this.end.y, this.start.x, this.start.y, this.end.x, this.end.y, this);
         g.setColor(Color.WHITE);
         g.setFont(new Font("Serif", Font.PLAIN, 24));
-        g.drawString("Drag to Drop image", this.Bi.getWidth()/2 - 50, 50);
+        g.drawString("Drag to Drop image", this.Bi.getWidth() / 2 - 50, 50);
 //         
     }
 
@@ -128,31 +127,51 @@ public class ImgShow extends JPanel implements Runnable{
 
     @Override
     public void run() {
-        while(dragImage){
+        while (dragImage) {
 //            time = System.get
             repaint();
         }
-        
-        BufferedImage img = this.Bi.getSubimage(this.start.x, this.start.y, this.end.x - this.start.x, this.end.y - this.start.y);
-        //file that we'll save to disk.
-        File file = new File(General.PATHTEMP + "cpk" + this.getTime() + ".jpg");
-        this.newJFrame.hide();
-        try {
+
+        if (this.end.x < this.start.x) {
+            int tempX = this.end.x;
+            this.end.x = this.start.x;
+            this.start.x = tempX;
+        }
+
+        if (this.end.y < this.start.y) {
+            int tempY = this.end.y;
+            this.end.y = this.start.y;
+            this.start.y = tempY;
+        }
+
+        if (this.end.x - this.start.x <= 0 || this.end.y - this.start.y <= 0) {
+            StringSelection selection = new StringSelection("CPKDropImg");
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(selection, selection);
+            this.trayIcon.displayMessage("Exception image size", "Witdh/Heigh is not zero", TrayIcon.MessageType.ERROR);
+        } else {
+
+            BufferedImage img = this.Bi.getSubimage(this.start.x, this.start.y, this.end.x - this.start.x, this.end.y - this.start.y);
+            //file that we'll save to disk.
+            File file = new File(General.PATHTEMP + "cpk" + this.getTime() + ".jpg");
+            this.newJFrame.hide();
+            try {
             //class to write image to disk.  You specify the image to be saved, its type,
-            // and then the file in which to write the image data.
-            ImageIO.write(img, "jpg", file);
-            FTPClient.upload(file.getName(), file);
-        } catch (IOException ex) {
-            //Logger.getLogger(ImgJPanel.class.getName()).log(Level.SEVERE, null, ex);
+                // and then the file in which to write the image data.
+                ImageIO.write(img, "jpg", file);
+                FTPClient.upload(file.getName(), file);
+            } catch (IOException ex) {
+                //Logger.getLogger(ImgJPanel.class.getName()).log(Level.SEVERE, null, ex);
 //            this.trayIcon.displayMessage("Upload error",
 //                            ex.getMessage(), TrayIcon.MessageType.ERROR);
+            }
+            file.delete();
+            String url = "http://" + General.SERVER + "/cpkdropimg/home/show/" + General.DIR + "/" + file.getName();
+            StringSelection selection = new StringSelection(url);
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(selection, selection);
+            this.trayIcon.displayMessage("Upload successful", "Link is copied to clipboard\n" + url, TrayIcon.MessageType.INFO);
         }
-        file.delete();
-        String url = "http://" + General.SERVER + "/cpkdropimg/home/show/" + General.DIR + "/" + file.getName();
-        StringSelection selection = new StringSelection(url);
-        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        clipboard.setContents(selection, selection);
-        this.trayIcon.displayMessage("Upload successful", "Link is copied to clipboard\n" + url, TrayIcon.MessageType.INFO);
         this.newJFrame.dispose();
     }
 }

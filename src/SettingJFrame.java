@@ -1,6 +1,8 @@
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.prefs.Preferences;
 
 /*
@@ -23,9 +25,8 @@ public class SettingJFrame extends javax.swing.JFrame {
         Dimension screenSize = tk.getScreenSize();
         final int x = screenSize.width / 2 - this.getWidth() / 2;
         final int y = screenSize.height / 2 - this.getHeight() / 2;
-// Setup the frame accordingly
-// This is assuming you are extending the JFrame //class
-        //this.setSize(WIDTH / 2, HEIGHT / 2);
+
+
         this.setLocation(x, y);
         this.serverText.setText(General.SERVER);
         this.portText.setText(General.PORT);
@@ -245,7 +246,6 @@ public class SettingJFrame extends javax.swing.JFrame {
 
         // Preference key name
         //final String PREF_NAME = "name_of_preference";
-
         // Set the value of the preference
         //String newValue = "a string";
         General.SERVER = this.serverText.getText();
