@@ -1,5 +1,4 @@
 
-
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -9,9 +8,8 @@ import java.util.prefs.Preferences;
 import javax.swing.*;
 
 public class TrayIconCPKDropImg {
-    
 
-    
+
     public static void main(String[] args) {
         /* Use an appropriate Look and Feel */
         try {
@@ -36,7 +34,7 @@ public class TrayIconCPKDropImg {
             }
         });
     }
-    
+
     private static void createAndShowGUI() {
         //Check the SystemTray support
         if (!SystemTray.isSupported()) {
@@ -47,7 +45,7 @@ public class TrayIconCPKDropImg {
         final TrayIcon trayIcon =
                 new TrayIcon(createImage("img/bulb.gif", "tray icon"));
         final SystemTray tray = SystemTray.getSystemTray();
-        
+
         // Create a popup menu components
         MenuItem aboutItem = new MenuItem("About");
         CheckboxMenuItem cb1 = new CheckboxMenuItem("Set auto size");
@@ -59,7 +57,7 @@ public class TrayIconCPKDropImg {
         //MenuItem noneItem = new MenuItem("None");
         MenuItem settingItem = new MenuItem("Setting");
         MenuItem exitItem = new MenuItem("Exit");
-        
+
         //Add components to popup menu
         popup.add(aboutItem);
         popup.addSeparator();
@@ -74,48 +72,48 @@ public class TrayIconCPKDropImg {
         popup.add(settingItem);
         popup.addSeparator();
         popup.add(exitItem);
-        
+
         trayIcon.setPopupMenu(popup);
-        
+
         try {
             tray.add(trayIcon);
         } catch (AWTException e) {
             System.out.println("TrayIcon could not be added.");
             return;
         }
-        
+
         trayIcon.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(null,
                         "CPKDropImg - ver 1.0\nHit PrintScreen key to drop and upload image");
             }
         });
-        
+
         aboutItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(null,
                         "Copyright © CPK 2014 - ver 1.0");
             }
         });
-        
+
         settingItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 SettingJFrame settingFrame = new SettingJFrame();
                 settingFrame.setVisible(true);
             }
         });
-        
+
         cb1.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 int cb1Id = e.getStateChange();
-                if (cb1Id == ItemEvent.SELECTED){
+                if (cb1Id == ItemEvent.SELECTED) {
                     trayIcon.setImageAutoSize(true);
                 } else {
                     trayIcon.setImageAutoSize(false);
                 }
             }
         });
-        
+
 //        cb2.addItemListener(new ItemListener() {
 //            public void itemStateChanged(ItemEvent e) {
 //                int cb2Id = e.getStateChange();
@@ -126,7 +124,6 @@ public class TrayIconCPKDropImg {
 //                }
 //            }
 //        });
-        
 //        ActionListener listener = new ActionListener() {
 //            public void actionPerformed(ActionEvent e) {
 //                MenuItem item = (MenuItem)e.getSource();
@@ -154,22 +151,20 @@ public class TrayIconCPKDropImg {
 //                }
 //            }
 //        };
-        
         //errorItem.addActionListener(listener);
         //warningItem.addActionListener(listener);
         //infoItem.addActionListener(listener);
         //noneItem.addActionListener(listener);
-        
         exitItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 tray.remove(trayIcon);
                 System.exit(0);
             }
         });
-        
+
         // Retrieve the user preference node for the package com.mycompany
         Preferences prefs = Preferences.userNodeForPackage(General.class);
-        
+
         // Get the value of the preference;
         General.SERVER = prefs.get(General.SERVER_NAME, General.SERVER);
         General.USER = prefs.get(General.USER_NAME, General.USER);
@@ -177,19 +172,17 @@ public class TrayIconCPKDropImg {
         General.PORT = prefs.get(General.PORT_NAME, General.PORT);
         General.DIR = prefs.get(General.DIR_NAME, General.DIR);
         General.PATHTEMP = prefs.get(General.PATHTEMP_NAME, General.PATHTEMP);
-        
-        StringSelection selection = new StringSelection("CPKDropImg");
-        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        clipboard.setContents(selection, selection);
-        
+
+        General.clearClipBoard();
+
         new ClipboardCPKDropImg(trayIcon).start();
         trayIcon.displayMessage("CPKDropImg started", "Hit PrintScreen key to drop and upload image", TrayIcon.MessageType.INFO);
     }
-    
+
     //Obtain the image URL
     protected static Image createImage(String path, String description) {
         URL imageURL = TrayIconCPKDropImg.class.getResource(path);
-        
+
         if (imageURL == null) {
             System.err.println("Resource not found: " + path);
             return null;

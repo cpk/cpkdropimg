@@ -35,9 +35,8 @@ public class ShowJFrame extends javax.swing.JFrame {
         //System.out.println("test");
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
-                StringSelection selection = new StringSelection("CPKDropImg");
-                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-                clipboard.setContents(selection, selection);
+                General.clearClipBoard();
+                ImgShow.dragImage = false;
             }
         });
         KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
@@ -133,6 +132,7 @@ public class ShowJFrame extends javax.swing.JFrame {
                     StringSelection selection = new StringSelection("CPKDropImg");
                     Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                     clipboard.setContents(selection, selection);
+                    ImgShow.dragImage = false;
                     dispose();
                 }
             }

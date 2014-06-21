@@ -32,7 +32,7 @@ public class ImgShow extends JPanel implements Runnable {
     public Point end;
     public ShowJFrame newJFrame;
     TrayIcon trayIcon;
-    boolean dragImage;
+    public static boolean dragImage;
 
     float time = 0;
 
@@ -145,9 +145,7 @@ public class ImgShow extends JPanel implements Runnable {
         }
 
         if (this.end.x - this.start.x <= 0 || this.end.y - this.start.y <= 0) {
-            StringSelection selection = new StringSelection("CPKDropImg");
-            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            clipboard.setContents(selection, selection);
+            General.clearClipBoard();
             this.trayIcon.displayMessage("Exception image size", "Witdh/Heigh is not zero", TrayIcon.MessageType.ERROR);
         } else {
 

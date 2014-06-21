@@ -1,3 +1,8 @@
+
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -21,4 +26,10 @@ public class General {
     public static String USER_NAME = "USER_CPKDROPIMG";
     public static String PASS_NAME = "PASS_CPKDROPIMG";
     public static String DIR_NAME = "DIR_CPKDROPIMG";
+    
+    public static void clearClipBoard(){
+        StringSelection selection = new StringSelection("CPKDropImg");
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(selection, selection);
+    }
 }
